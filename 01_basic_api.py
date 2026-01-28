@@ -1,7 +1,19 @@
+"""
+*
+* Testing Gemini ai api 
+* interact with the model inside terminal for query and rendered response
+*
+"""
+
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
+from rich.console import Console
+from rich.markdown import Markdown
+
+
+console=Console()
 
 #load environment variable
 load_dotenv()
@@ -17,18 +29,20 @@ def setup_gemini():
     print("api key configured succussfully")
     return genai
 
-def simple_chat(prompt, model_name="gemini-2.5-flash"):
+def simple_chat(prompt, model_name="deep-research-pro-preview-12-2025"):
     try:
         model=genai.GenerativeModel(model_name)
-
-        response=model.generate_content(prompt,stream=True)
+        response=model.generate_content(prompt)
 
         print(f"You asked {prompt}")
         print(f"{'*'*4}")
-        print(response.text)
+
+        md=Markdown(response.text)
+        console.print(md)
         return response
+    
     except Exception as e:
-        print("error occured",e)
+        print("error occured :",e)
         return 
     
 if __name__=="__main__":
