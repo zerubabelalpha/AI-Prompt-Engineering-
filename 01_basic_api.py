@@ -21,7 +21,7 @@ def simple_chat(prompt, model_name="gemini-2.5-flash"):
     try:
         model=genai.GenerativeModel(model_name)
 
-        response=model.generate_content(prompt)
+        response=model.generate_content(prompt,stream=True)
 
         print(f"You asked {prompt}")
         print(f"{'*'*4}")
