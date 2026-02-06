@@ -43,7 +43,7 @@ def simple_chat(client, prompt,model_name="arcee-ai/trinity-mini:free"):
         input=prompt
         )
 
-        reply = response.output_text
+        reply = response.output_text or "_(No response)_"
         
         #print("AI :",reply)
 
@@ -56,12 +56,47 @@ def simple_chat(client, prompt,model_name="arcee-ai/trinity-mini:free"):
 
 
     except Exception as e:
-        print ("error occured",e)
-        return
+        console.print (f"[bold red]Error occurred:[/bold red] {e}")
+        return None
+
+
+## 
+#
+# trying with diferent model parameters
+#
+##
+
+
+def generate_with_parameters(client, prompt, temp, max_token, model_name="arcee-ai/trinity-mini:free"):
+
+    try:
+
+        response = client.responses.create(
+            model=model_name,
+            input=prompt,
+            temperature = temp,
+            max_output_tokens = max_token
+        )
+
+        reply = response.output_text or "_(No response)_"
+        
+        #print("AI :",reply)
+
+        md=Markdown(reply)
+        console.print(md)
+        print()
+
+        return reply
+
+
+    except Exception as e:
+        console.print (f"[bold red]Error occurred:[/bold red] {e}")
+        return None
+
 
 
 if __name__=="__main__":
-    print("==== Model Testing ====")
+    console.print("[bold cyan]==== Model Testing ==== [/bold cyan]\n")
 
     client = setup_model()
     if not client:
@@ -69,7 +104,8 @@ if __name__=="__main__":
 
 
     while True:
-        user_input = input("Ask me anything...  (quit) to exit.\n")
+        user_input = input("Ask me anything...  (quit to exit).\n> ")
         if user_input.lower()=='quit':
             break
-        simple_chat(client, user_input)
+        #simple_chat(client, user_input)
+        generate_with_parameters(client, user_input, 0, 5000)
